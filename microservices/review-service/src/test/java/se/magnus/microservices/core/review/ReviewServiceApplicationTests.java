@@ -13,7 +13,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 class ReviewServiceApplicationTests {
 
-@Autowired private WebTestClient client;
+  @Autowired private WebTestClient client;
 
   @Test
   void getReviewsByProductId() {
@@ -87,7 +87,6 @@ class ReviewServiceApplicationTests {
       .expectHeader().contentType(APPLICATION_JSON)
       .expectBody()
         .jsonPath("$.path").isEqualTo("/review")
-        .jsonPath("$.message").isEqualTo("Невалидный productId: " + productIdInvalid);
+        .jsonPath("$.message").isEqualTo("Invalid productId: " + productIdInvalid);
   }
-
 }

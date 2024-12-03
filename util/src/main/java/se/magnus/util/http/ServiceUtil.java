@@ -33,7 +33,7 @@ public class ServiceUtil {
     try {
       return InetAddress.getLocalHost().getHostName();
     } catch (UnknownHostException e) {
-      return "неизвестное имя хоста";
+      return "unknown host name";
     }
   }
 
@@ -41,7 +41,7 @@ public class ServiceUtil {
     try {
       return InetAddress.getLocalHost().getHostAddress();
     } catch (UnknownHostException e) {
-      return "неизвестный IP адрес";
+      return "unknown IP address";
     }
   }
 }

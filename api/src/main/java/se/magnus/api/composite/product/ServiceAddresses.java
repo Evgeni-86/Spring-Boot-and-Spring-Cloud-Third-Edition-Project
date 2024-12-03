@@ -1,16 +1,16 @@
 package se.magnus.api.composite.product;
 
 public class ServiceAddresses {
-  private final String composite;
-  private final String product;
-  private final String review;
-  private final String recommendation;
+  private final String cmp;
+  private final String pro;
+  private final String rev;
+  private final String rec;
 
   public ServiceAddresses() {
-    composite = null;
-    product = null;
-    review = null;
-    recommendation = null;
+    cmp = null;
+    pro = null;
+    rev = null;
+    rec = null;
   }
 
   public ServiceAddresses(
@@ -19,25 +19,25 @@ public class ServiceAddresses {
     String reviewAddress,
     String recommendationAddress) {
 
-    this.composite = compositeAddress;
-    this.product = productAddress;
-    this.review = reviewAddress;
-    this.recommendation = recommendationAddress;
+    this.cmp = compositeAddress;
+    this.pro = productAddress;
+    this.rev = reviewAddress;
+    this.rec = recommendationAddress;
   }
 
-  public String getComposite() {
-    return composite;
+  public String getCmp() {
+    return cmp;
   }
 
-  public String getProduct() {
-    return product;
+  public String getPro() {
+    return pro;
   }
 
-  public String getReview() {
-    return review;
+  public String getRev() {
+    return rev;
   }
 
-  public String getRecommendation() {
-    return recommendation;
+  public String getRec() {
+    return rec;
   }
 }
