@@ -17,3 +17,5 @@ RabbitMQ: http://localhost:15672/#/queues
 Eureka: http://localhost:8080/eureka/web
 
 Eureka (зарегистрированные экземпляры): http://localhost:8080/eureka/api/apps
+
+test2
