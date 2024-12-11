@@ -18,4 +18,4 @@ Eureka: http://localhost:8080/eureka/web
 
 Eureka (зарегистрированные экземпляры): http://localhost:8080/eureka/api/apps
 
-test
+test23
