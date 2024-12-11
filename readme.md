@@ -8,7 +8,7 @@
 
 Посмотреть контейнеры: docker-compose ps gateway eureka product-composite product recommendation review
 
-Swagger: http://localhost:8080/openapi/swagger-ui.html
+Swagger: https://localhost:8443/openapi/webjars/swagger-ui/index.html
 
 Actuator: http://localhost:8080/actuator/health
 
@@ -17,3 +17,13 @@ RabbitMQ: http://localhost:15672/#/queues
 Eureka: http://localhost:8080/eureka/web
 
 Eureka (зарегистрированные экземпляры): http://localhost:8080/eureka/api/apps
+
+Eureka (зарегистрированные экземпляры): curl -H "accept:application/json" https://u:p@localhost:8443/eureka/api/apps -ks | jq -r .applications.application[].instance[].instanceId
+
+Получение токена (чтение, запись): curl -k https://writer:secret-writer@localhost:8443/oauth2/token -d grant_type=client_credentials -d scope="product:read product:write" -s | jq .
+
+Получение токена (чтение): curl -k https://reader:secret-reader@localhost:8443/oauth2/token -d grant_type=client_credentials -d scope="product:read" -s | jq .
+
+Получение токена через код авторизации (чтение + refresh token): 
+1. https://localhost:8443/oauth2/authorize?response_type=code&client_id=reader&redirect_uri=https://my.redirect.uri&scope=product:read&state=35725
+3. curl -k https://reader:secret-reader@localhost:8443/oauth2/token -d grant_type=authorization_code -d client_id=reader -d redirect_uri=https://my.redirect.uri -d code=$CODE(из предыдущего ответа) -s | jq .
