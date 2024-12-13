@@ -27,3 +27,7 @@ Eureka (зарегистрированные экземпляры): curl -H "acc
 Получение токена через код авторизации (чтение + refresh token): 
 1. https://localhost:8443/oauth2/authorize?response_type=code&client_id=reader&redirect_uri=https://my.redirect.uri&scope=product:read&state=35725
 3. curl -k https://reader:secret-reader@localhost:8443/oauth2/token -d grant_type=authorization_code -d client_id=reader -d redirect_uri=https://my.redirect.uri -d code=$CODE(из предыдущего ответа) -s | jq .
+
+Команды в контейнере:
+1. kafka-topics --list --bootstrap-server localhost:9092  == топики
+2. kafka-consumer-groups --bootstrap-server localhost:9092 --list
