@@ -31,3 +31,5 @@ Eureka (зарегистрированные экземпляры): curl -H "acc
 Команды в контейнере:
 1. kafka-topics --list --bootstrap-server localhost:9092  == топики
 2. kafka-consumer-groups --bootstrap-server localhost:9092 --list
+3. curl -s http://product-composite:8080/actuator/health
+4. product-composite curl -s http://product-composite:8080/actuator/health | jq -r .components.circuitBreakers.details.product.details.state
