@@ -16,6 +16,8 @@ RabbitMQ: http://localhost:15672/#/queues
 
 Eureka: http://localhost:8080/eureka/web
 
+Zipkin: http://localhost:9411/zipkin
+
 Eureka (зарегистрированные экземпляры): http://localhost:8080/eureka/api/apps
 
 Eureka (зарегистрированные экземпляры): curl -H "accept:application/json" https://u:p@localhost:8443/eureka/api/apps -ks | jq -r .applications.application[].instance[].instanceId
