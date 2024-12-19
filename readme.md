@@ -35,3 +35,21 @@ Eureka (зарегистрированные экземпляры): curl -H "acc
 2. kafka-consumer-groups --bootstrap-server localhost:9092 --list
 3. curl -s http://product-composite:8080/actuator/health
 4. product-composite curl -s http://product-composite:8080/actuator/health | jq -r .components.circuitBreakers.details.product.details.state
+
+K8S
+1. docker context use default
+2. ./minikube.exe start --profile=handson-spring-boot-cloud --memory=5240 --cpus=4 --disk-size=10g --driver=docker --ports=8080:80 --ports=8443:443 --ports=30080:30080 --ports=30443:30443
+3. ./minikube.exe profile handson-spring-boot-cloud
+4. ./minikube.exe addons enable ingress
+5. ./minikube.exe addons enable metrics-server
+6. kubectl get nodes
+7. kubectl get pods --all-namespaces
+8. ./minikube.exe stop
+9. ./minikube.exe start --profile=handson-spring-boot-cloud
+10. Создать пространство имен: kubectl create namespace first-attempts
+11. Обновление контекста для использования пространства имен: kubectl config set-context $(kubectl config current-context) --namespace=first-attempts
+12. Создание деплоймента(развертывание): kubectl apply -f .\nginx-deployment.yaml
+13. Посмотреть сервисы: kubectl get services. Запрос к сервису кластера: http://localhost:30080
+14. Запуск пода для выполнения curl запроса: kubectl run -i --rm --restart=Never curl-client --image=curlimages/curl --command -- curl -s 'http://nginx-service:80'
+15. Удалить пространство имен: kubectl delete namespace first-attempts
+16. Удалить кластер: ./minikube.exe delete --profile handson-spring-boot-cloud
