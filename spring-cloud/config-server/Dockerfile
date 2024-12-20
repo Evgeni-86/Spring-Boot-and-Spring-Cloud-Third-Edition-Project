@@ -5,6 +5,7 @@ RUN java -Djarmode=layertools -jar app.jar extract
 
 FROM eclipse-temurin:17.0.5_8-jre-focal
 WORKDIR application
+COPY ./build/resources/main/config-repo ./config-repo/
 COPY --from=builder extracted/dependencies/ ./
 COPY --from=builder extracted/spring-boot-loader/ ./
 COPY --from=builder extracted/snapshot-dependencies/ ./
