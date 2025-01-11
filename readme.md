@@ -77,17 +77,7 @@ eval $(./minikube.exe docker-env) --переключиться на docker в mi
 ```
 docker-compose build --собрать контейнеры приложения
 ```
-3. __Собрать Чарты:__
-```
-for f in kubernetes/helm/components/*; do helm dep up $f; done
-```  
-```
-for f in kubernetes/helm/environments/*; do helm dep up $f; done
-```  
-```
-helm dep ls kubernetes/helm/environments/dev-env/
-```
-4. __Загрузить образы в докере minikube__
+3. __Загрузить образы в докере minikube__
 ```
 eval $(minikube docker-env)  
 ```
@@ -103,13 +93,51 @@ docker pull rabbitmq:3.11.8-management
 ```
 docker pull openzipkin/zipkin:2.24.0
 ```
-5. __Установить Чарты__
+4. __Установить Istio__
+```
+./istioctl install --skip-confirmation --set profile=demo --set meshConfig.accessLogFile=/dev/stdout --set meshConfig.accessLogEncoding=JSON --set values.pilot.env.PILOT_JWT_PUB_KEY_REFRESH_INTERVAL=15s -f C:/Users/astonuser/IntellijIDEAProjects/Spring-Boot-and-Spring-Cloud-Third-Edition-Project/kubernetes/istio-tracing.yml
+```
+```
+kubectl -n istio-system wait --timeout=600s --for=condition=available deployment --all
+```
+```
+kubectl apply -n istio-system -f https://raw.githubusercontent.com/istio/istio/release-1.24/samples/addons/kiali.yaml
+kubectl apply -n istio-system -f https://raw.githubusercontent.com/istio/istio/release-1.24/samples/addons/jaeger.yaml
+kubectl apply -n istio-system -f https://raw.githubusercontent.com/istio/istio/release-1.24/samples/addons/prometheus.yaml
+kubectl apply -n istio-system -f https://raw.githubusercontent.com/istio/istio/release-1.24/samples/addons/grafana.yaml
+```
+```
+kubectl -n istio-system wait --timeout=600s --for=condition=available deployment --all
+```
+```
+kubectl -n istio-system get deploy
+```
+```
+helm upgrade --install istio-hands-on-addons kubernetes/helm/environments/istio-system -n istio-system --wait
+```
+5. __Собрать Чарты:__
+```
+kubectl apply -f kubernetes/hands-on-namespace.yml
+```
+```
+kubectl config set-context $(kubectl config current-context) --namespace=hands-on
+```
+```
+for f in kubernetes/helm/components/*; do helm dep up $f; done
+```  
+```
+for f in kubernetes/helm/environments/*; do helm dep up $f; done
+```  
+```
+helm dep ls kubernetes/helm/environments/dev-env/
+```
+6. __Установить Чарты__
 ```
 helm template kubernetes/helm/environments/dev-env
 ```  
 ```
 helm install hands-on-dev-env kubernetes/helm/environments/dev-env -n hands-on --create-namespace
-```  
+```
 ```
 kubectl config set-context $(kubectl config current-context) --namespace=hands-on
 ```
@@ -170,7 +198,35 @@ helm install cert-manager jetstack/cert-manager --create-namespace --namespace c
 ```
 sudo bash -c "echo 127.0.0.1 minikube.me | tee -a /etc/hosts"
 ```
-4. __Собрать Чарты:__
+4. __Установить Istio__
+```
+./istioctl install --skip-confirmation --set profile=demo --set meshConfig.accessLogFile=/dev/stdout --set meshConfig.accessLogEncoding=JSON --set values.pilot.env.PILOT_JWT_PUB_KEY_REFRESH_INTERVAL=15s -f C:/Users/astonuser/IntellijIDEAProjects/Spring-Boot-and-Spring-Cloud-Third-Edition-Project/kubernetes/istio-tracing.yml
+```
+```
+kubectl -n istio-system wait --timeout=600s --for=condition=available deployment --all
+```
+```
+kubectl apply -n istio-system -f https://raw.githubusercontent.com/istio/istio/release-1.24/samples/addons/kiali.yaml
+kubectl apply -n istio-system -f https://raw.githubusercontent.com/istio/istio/release-1.24/samples/addons/jaeger.yaml
+kubectl apply -n istio-system -f https://raw.githubusercontent.com/istio/istio/release-1.24/samples/addons/prometheus.yaml
+kubectl apply -n istio-system -f https://raw.githubusercontent.com/istio/istio/release-1.24/samples/addons/grafana.yaml
+```
+```
+kubectl -n istio-system wait --timeout=600s --for=condition=available deployment --all
+```
+```
+kubectl -n istio-system get deploy
+```
+```
+helm upgrade --install istio-hands-on-addons kubernetes/helm/environments/istio-system -n istio-system --wait
+```
+5. __Собрать Чарты:__
+```
+kubectl apply -f kubernetes/hands-on-namespace.yml
+```
+```
+kubectl config set-context $(kubectl config current-context) --namespace=hands-on
+```
 ```
 for f in kubernetes/helm/components/*; do helm dep up $f; done
 ```  
@@ -180,25 +236,25 @@ for f in kubernetes/helm/environments/*; do helm dep up $f; done
 ```
 helm template kubernetes/helm/environments/prod-env
 ```
-5. __Установить чарты__
+6. __Установить чарты__
 ```
 helm install hands-on-prod-env kubernetes/helm/environments/prod-env -n hands-on --create-namespace
 ```
 ```
 kubectl config set-context $(kubectl config current-context) --namespace=hands-on
 ```
-6. __Используемые контейнеры в среде:__ 
+7. __Используемые контейнеры в среде:__ 
 ```
-6. kubectl get pods -n hands-on -o json | jq .items[].spec.containers[].image
+kubectl get pods -n hands-on -o json | jq .items[].spec.containers[].image
 ```
-3. __Запуск тестов__  
+8. __Запуск тестов__  
 ```
 HOST=localhost PORT=8443 USE_K8S=true ./test-em-all.bash
 ```  
 ```
 CONFIG_SERVER_USR=prod-usr CONFIG_SERVER_PWD=prod-pwd PORT=8443 USE_K8S=true ./test-em-all.bash
 ```
-4. __Запросы__  
+9. __Запросы__  
 *Получить токен:* 
 ```
 ACCESS_TOKEN=$(curl -d grant_type=client_credentials -ks https://writer:secret-writer@localhost:8443/oauth2/token -d scope="product:read product:write" | jq .access_token -r)
@@ -211,11 +267,11 @@ echo $ACCESS_TOKEN
 ```
 curl -kH "Authorization: Bearer $ACCESS_TOKEN" https://localhost:8443/product-composite/1?delay=0
 ```
-5. __Удалить пространство имен:__ 
+10. __Удалить пространство имен:__ 
 ```
 kubectl delete namespace hands-on
 ```  
-6. __Остановить контейнеры в docker minikube (выполнят из каталога проекта)__  
+11. __Остановить контейнеры в docker minikube (выполнят из каталога проекта)__  
 ```
 eval $(./minikube.exe docker-env)
 ```  

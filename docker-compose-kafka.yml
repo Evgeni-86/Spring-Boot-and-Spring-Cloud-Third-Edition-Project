@@ -12,7 +12,7 @@ services:
       - SPRING_DATA_MONGODB_USERNAME=${MONGODB_USR}
       - SPRING_DATA_MONGODB_PASSWORD=${MONGODB_PWD}
     volumes:
-      - ./config-repo:/config-repo
+      - $PWD/config-repo:/config-repo
     depends_on:
       mongodb:
         condition: service_healthy
@@ -30,7 +30,7 @@ services:
       - SPRING_DATA_MONGODB_USERNAME=${MONGODB_USR}
       - SPRING_DATA_MONGODB_PASSWORD=${MONGODB_PWD}
     volumes:
-      - ./config-repo:/config-repo
+      - $PWD/config-repo:/config-repo
     depends_on:
       mongodb:
         condition: service_healthy
@@ -48,7 +48,7 @@ services:
       - SPRING_DATA_MONGODB_USERNAME=${MONGODB_USR}
       - SPRING_DATA_MONGODB_PASSWORD=${MONGODB_PWD}
     volumes:
-      - ./config-repo:/config-repo
+      - $PWD/config-repo:/config-repo
     depends_on:
       mongodb:
         condition: service_healthy
@@ -66,7 +66,7 @@ services:
       - SPRING_DATA_MONGODB_USERNAME=${MONGODB_USR}
       - SPRING_DATA_MONGODB_PASSWORD=${MONGODB_PWD}
     volumes:
-      - ./config-repo:/config-repo
+      - $PWD/config-repo:/config-repo
     depends_on:
       mongodb:
         condition: service_healthy
@@ -83,7 +83,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=${MYSQL_USR}
       - SPRING_DATASOURCE_PASSWORD=${MYSQL_PWD}
     volumes:
-      - ./config-repo:/config-repo
+      - $PWD/config-repo:/config-repo
     depends_on:
       mysql:
         condition: service_healthy
@@ -100,7 +100,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=${MYSQL_USR}
       - SPRING_DATASOURCE_PASSWORD=${MYSQL_PWD}
     volumes:
-      - ./config-repo:/config-repo
+      - $PWD/config-repo:/config-repo
     depends_on:
       mysql:
         condition: service_healthy
@@ -115,7 +115,7 @@ services:
       - SPRING_PROFILES_ACTIVE=docker,streaming_partitioned,kafka
       - SPRING_CONFIG_LOCATION=file:/config-repo/application.yml,file:/config-repo/product-composite.yml
     volumes:
-      - ./config-repo:/config-repo
+      - $PWD/config-repo:/config-repo
     depends_on:
       kafka:
         condition: service_started
@@ -124,6 +124,7 @@ services:
 
   mongodb:
     image: mongo:6.0.4
+    restart: always
     mem_limit: 512m
     ports:
       - "27017:27017"
@@ -139,6 +140,7 @@ services:
 
   mysql:
     image: mysql:8.0.32
+    restart: always
     mem_limit: 512m
     ports:
       - "3306:3306"
@@ -185,7 +187,7 @@ services:
       - SPRING_CONFIG_LOCATION=file:/config-repo/application.yml,file:/config-repo/gateway.yml
       - SERVER_SSL_KEY_STORE_PASSWORD=${GATEWAY_TLS_PWD}
     volumes:
-      - ./config-repo:/config-repo
+      - $PWD/config-repo:/config-repo
     ports:
       - "8443:8443"
     depends_on:
@@ -200,14 +202,14 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_CONFIG_LOCATION=file:/config-repo/application.yml,file:/config-repo/auth-server.yml
     volumes:
-      - ./config-repo:/config-repo
+      - $PWD/config-repo:/config-repo
     healthcheck:
-      test: ["CMD", "curl", "-fs", "http://localhost/actuator/health"]
+      test: ["CMD", "curl", "-fs", "http://localhost:4004/actuator/health"]
       interval: 5s
       timeout: 2s
       retries: 60
 
-  zipkin-server:
+  jaeger-collector.istio-system:
     image: openzipkin/zipkin:2.24.0
     restart: always
     mem_limit: 1024m

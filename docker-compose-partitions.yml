@@ -14,7 +14,7 @@ services:
       - SPRING_DATA_MONGODB_USERNAME=${MONGODB_USR}
       - SPRING_DATA_MONGODB_PASSWORD=${MONGODB_PWD}
     volumes:
-      - ./config-repo:/config-repo
+      - $PWD/config-repo:/config-repo
     depends_on:
       mongodb:
         condition: service_healthy
@@ -34,7 +34,7 @@ services:
       - SPRING_DATA_MONGODB_USERNAME=${MONGODB_USR}
       - SPRING_DATA_MONGODB_PASSWORD=${MONGODB_PWD}
     volumes:
-      - ./config-repo:/config-repo
+      - $PWD/config-repo:/config-repo
     depends_on:
       mongodb:
         condition: service_healthy
@@ -54,7 +54,7 @@ services:
       - SPRING_DATA_MONGODB_USERNAME=${MONGODB_USR}
       - SPRING_DATA_MONGODB_PASSWORD=${MONGODB_PWD}
     volumes:
-      - ./config-repo:/config-repo
+      - $PWD/config-repo:/config-repo
     depends_on:
       mongodb:
         condition: service_healthy
@@ -74,7 +74,7 @@ services:
       - SPRING_DATA_MONGODB_USERNAME=${MONGODB_USR}
       - SPRING_DATA_MONGODB_PASSWORD=${MONGODB_PWD}
     volumes:
-      - ./config-repo:/config-repo
+      - $PWD/config-repo:/config-repo
     depends_on:
       mongodb:
         condition: service_healthy
@@ -93,7 +93,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=${MYSQL_USR}
       - SPRING_DATASOURCE_PASSWORD=${MYSQL_PWD}
     volumes:
-      - ./config-repo:/config-repo
+      - $PWD/config-repo:/config-repo
     depends_on:
       mysql:
         condition: service_healthy
@@ -112,7 +112,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=${MYSQL_USR}
       - SPRING_DATASOURCE_PASSWORD=${MYSQL_PWD}
     volumes:
-      - ./config-repo:/config-repo
+      - $PWD/config-repo:/config-repo
     depends_on:
       mysql:
         condition: service_healthy
@@ -129,7 +129,7 @@ services:
       - SPRING_RABBITMQ_USERNAME=${RABBITMQ_USR}
       - SPRING_RABBITMQ_PASSWORD=${RABBITMQ_PWD}
     volumes:
-      - ./config-repo:/config-repo
+      - $PWD/config-repo:/config-repo
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -138,6 +138,7 @@ services:
 
   mongodb:
     image: mongo:6.0.4
+    restart: always
     mem_limit: 512m
     ports:
       - "27017:27017"
@@ -153,6 +154,7 @@ services:
 
   mysql:
     image: mysql:8.0.32
+    restart: always
     mem_limit: 512m
     ports:
       - "3306:3306"
@@ -169,6 +171,7 @@ services:
 
   rabbitmq:
     image: rabbitmq:3.11.8-management
+    restart: always
     mem_limit: 512m
     ports:
       - 5672:5672
@@ -193,7 +196,7 @@ services:
       - SPRING_RABBITMQ_USERNAME=${RABBITMQ_USR}
       - SPRING_RABBITMQ_PASSWORD=${RABBITMQ_PWD}
     volumes:
-      - ./config-repo:/config-repo
+      - $PWD/config-repo:/config-repo
     ports:
       - "8443:8443"
     depends_on:
@@ -210,14 +213,14 @@ services:
       - SPRING_RABBITMQ_USERNAME=${RABBITMQ_USR}
       - SPRING_RABBITMQ_PASSWORD=${RABBITMQ_PWD}
     volumes:
-      - ./config-repo:/config-repo
+      - $PWD/config-repo:/config-repo
     healthcheck:
-      test: ["CMD", "curl", "-fs", "http://localhost/actuator/health"]
+      test: ["CMD", "curl", "-fs", "http://localhost:4004/actuator/health"]
       interval: 5s
       timeout: 2s
       retries: 60
 
-  zipkin-server:
+  jaeger-collector.istio-system:
     image: openzipkin/zipkin:2.24.0
     restart: always
     mem_limit: 1024m
